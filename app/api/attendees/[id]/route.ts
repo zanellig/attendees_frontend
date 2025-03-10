@@ -8,7 +8,15 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const id = params.id;
+    const id = params?.id;
+
+    if (!id) {
+      return NextResponse.json(
+        { error: "Missing ID parameter" },
+        { status: 400 }
+      );
+    }
+
     const [rows] = await pool.query("SELECT * FROM attendees WHERE id = ?", [
       id,
     ]);
@@ -37,7 +45,15 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    const id = params.id;
+    const id = params?.id;
+
+    if (!id) {
+      return NextResponse.json(
+        { error: "Missing ID parameter" },
+        { status: 400 }
+      );
+    }
+
     const data: Attendee = await request.json();
 
     // Validate required fields
@@ -114,7 +130,15 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const id = params.id;
+    const id = params?.id;
+
+    if (!id) {
+      return NextResponse.json(
+        { error: "Missing ID parameter" },
+        { status: 400 }
+      );
+    }
+
     const [result] = await pool.query("DELETE FROM attendees WHERE id = ?", [
       id,
     ]);

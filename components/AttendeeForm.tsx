@@ -25,7 +25,7 @@ const formSchema = z.object({
     .string()
     .min(2, { message: "El nombre debe tener al menos 2 caracteres" }),
   phone_number: z.string().refine(isValidPhoneNumber, {
-    message: "El número de teléfono debe tener 10 dígitos (ej: 11-6909-9995)",
+    message: "El número de teléfono debe tener 10 dígitos (ej: 11-XXXX-XXXX)",
   }),
   email: z
     .string()
@@ -213,7 +213,7 @@ export function AttendeeForm({ attendee, onSuccess }: AttendeeFormProps) {
           <div className="bg-amber-50 dark:bg-amber-950/30 p-4 rounded-md border border-amber-200 dark:border-amber-800">
             <p className="text-sm text-amber-800 dark:text-amber-300">
               <strong>Nota:</strong> El número de teléfono debe tener 10 dígitos
-              en el formato: 11-6909-9995. Solo se permiten números.
+              en el formato: 11-XXXX-XXXX. Solo se permiten números.
             </p>
           </div>
         </CardContent>

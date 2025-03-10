@@ -98,7 +98,7 @@ export function PhoneInput({
           className={cn("flex-1 rounded-l-none", className)}
           value={value}
           onChange={handleInputChange}
-          placeholder="11-6909-9995"
+          placeholder="11-XXXX-XXXX"
           maxLength={12} // 10 digits + 2 hyphens
         />
       </div>
