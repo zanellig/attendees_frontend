@@ -1,36 +1,108 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Event Confirmation System
 
-## Getting Started
+A full-stack CRUD application for managing event attendees built with Next.js, React Query, and MySQL.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- View a list of all event attendees
+- Add new attendees
+- View detailed information about each attendee
+- Edit attendee information
+- Delete attendees
+- Responsive UI built with Shadcn UI components
+
+## Tech Stack
+
+- **Frontend**: Next.js 15, React 19, TanStack Query
+- **UI Components**: Shadcn UI (based on Radix UI)
+- **Form Handling**: React Hook Form with Zod validation
+- **Database**: MySQL
+- **API**: Next.js API Routes
+- **Styling**: Tailwind CSS
+
+## Prerequisites
+
+- Node.js 18+ and pnpm
+- MySQL database
+
+## Environment Setup
+
+Create a `.env` file in the root directory with the following variables:
+
+```
+DATABASE_HOST=localhost
+DATABASE_USER=your_mysql_username
+DATABASE_PASSWORD=your_mysql_password
+DATABASE_NAME=event_confirmations
+DATABASE_PORT=3306
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Database Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The application assumes you already have a MySQL database named `event_confirmations` with an `attendees` table that has the following structure:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```sql
+CREATE TABLE attendees (
+  id INT NOT NULL AUTO_INCREMENT,
+  name VARCHAR(100) NOT NULL,
+  phone_number VARCHAR(20) NOT NULL,
+  email VARCHAR(100) NOT NULL,
+  job_title VARCHAR(100),
+  company VARCHAR(100),
+  group_size INT NOT NULL,
+  dietary_preferences VARCHAR(255),
+  additional_comments TEXT,
+  confirmation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  INDEX idx_email (email),
+  INDEX idx_phone_number (phone_number),
+  INDEX idx_company (company),
+  INDEX idx_confirmation_date (confirmation_date)
+);
+```
 
-## Learn More
+## Installation
 
-To learn more about Next.js, take a look at the following resources:
+1. Clone the repository
+2. Install dependencies:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+pnpm install
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Development
 
-## Deploy on Vercel
+Run the development server:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+pnpm dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+
+## Build for Production
+
+```bash
+pnpm build
+pnpm start
+```
+
+## API Endpoints
+
+- `GET /api/attendees` - Get all attendees
+- `POST /api/attendees` - Create a new attendee
+- `GET /api/attendees/[id]` - Get a specific attendee
+- `PUT /api/attendees/[id]` - Update a specific attendee
+- `DELETE /api/attendees/[id]` - Delete a specific attendee
+
+## Project Structure
+
+- `/app` - Next.js app router pages and API routes
+- `/components` - React components
+- `/hooks` - Custom React hooks including React Query hooks
+- `/lib` - Utility functions, types, and database connection
+- `/public` - Static assets
+
+## License
+
+MIT
