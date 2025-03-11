@@ -125,7 +125,7 @@ export function AttendeeForm({ attendee, onSuccess }: AttendeeFormProps) {
   };
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
+    <Card className="w-full mx-auto">
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardContent className="space-y-4 pt-6">
           <div className="space-y-2">
@@ -218,7 +218,7 @@ export function AttendeeForm({ attendee, onSuccess }: AttendeeFormProps) {
           </div>
         </CardContent>
 
-        <CardFooter className="flex justify-end space-x-2">
+        <CardFooter className="flex justify-end space-x-2 pt-4">
           {isEditing && (
             <Button
               type="button"
