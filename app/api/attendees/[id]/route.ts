@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import pool from "@/lib/db";
+import db, { transformQuery } from "@/lib/db/database.service";
 import { Attendee } from "@/lib/types";
-import { isValidPhoneNumber, transformPhoneNumber } from "@/lib/utils";
+import { isValidPhoneNumber } from "@/lib/utils";
 
 export async function GET(
   request: NextRequest,
@@ -17,20 +17,17 @@ export async function GET(
       );
     }
 
-    const [rows] = await pool.query("SELECT * FROM attendees WHERE id = ?", [
-      id,
-    ]);
+    const sql = transformQuery("SELECT * FROM attendees WHERE id = ?");
+    const [rows] = await db.query(sql, [id]);
 
-    // @ts-ignore
-    if (!rows || rows.length === 0) {
+    if (!rows || (Array.isArray(rows) && rows.length === 0)) {
       return NextResponse.json(
         { error: "Attendee not found" },
         { status: 404 }
       );
     }
 
-    // @ts-ignore
-    return NextResponse.json(rows[0]);
+    return NextResponse.json(Array.isArray(rows) ? rows[0] : rows);
   } catch (error) {
     console.error("Error fetching attendee:", error);
     return NextResponse.json(
@@ -56,7 +53,6 @@ export async function PUT(
 
     const data: Attendee = await request.json();
 
-    // Validate required fields
     if (
       !data.name ||
       !data.phone_number ||
@@ -71,19 +67,15 @@ export async function PUT(
       );
     }
 
-    // Validate phone number format
-    // The phone number should already be in the format "XXYXXXXXXXXX" from the frontend
-    // But we'll validate it here as well for extra security
     const phoneNumberDigits = data.phone_number.replace(/\D/g, "");
     if (phoneNumberDigits.length < 12) {
-      // Country code (2) + 9 (1) + phone number (10) = 13 digits minimum
       return NextResponse.json(
         { error: "Invalid phone number format" },
         { status: 400 }
       );
     }
 
-    const [result] = await pool.query(
+    const sql = transformQuery(
       `UPDATE attendees SET 
        name = ?, 
        phone_number = ?, 
@@ -93,22 +85,29 @@ export async function PUT(
        group_size = ?, 
        dietary_preferences = ?, 
        additional_comments = ? 
-       WHERE id = ?`,
-      [
-        data.name,
-        data.phone_number, // Already transformed by the frontend
-        data.email,
-        data.job_title,
-        data.company,
-        data.group_size,
-        data.dietary_preferences || null,
-        data.additional_comments || null,
-        id,
-      ]
+       WHERE id = ?`
     );
 
-    // @ts-ignore
-    if (result.affectedRows === 0) {
+    const [result] = await db.query(sql, [
+      data.name,
+      data.phone_number,
+      data.email,
+      data.job_title,
+      data.company,
+      data.group_size,
+      data.dietary_preferences || null,
+      data.additional_comments || null,
+      id,
+    ]);
+
+    let affectedRows = 0;
+    if (result && typeof result === "object" && "affectedRows" in result) {
+      affectedRows = (result as any).affectedRows;
+    } else if (result && typeof result === "object" && "rowCount" in result) {
+      affectedRows = (result as any).rowCount;
+    }
+
+    if (affectedRows === 0) {
       return NextResponse.json(
         { error: "Attendee not found" },
         { status: 404 }
@@ -139,12 +138,17 @@ export async function DELETE(
       );
     }
 
-    const [result] = await pool.query("DELETE FROM attendees WHERE id = ?", [
-      id,
-    ]);
+    const sql = transformQuery("DELETE FROM attendees WHERE id = ?");
+    const [result] = await db.query(sql, [id]);
 
-    // @ts-ignore
-    if (result.affectedRows === 0) {
+    let affectedRows = 0;
+    if (result && typeof result === "object" && "affectedRows" in result) {
+      affectedRows = (result as any).affectedRows;
+    } else if (result && typeof result === "object" && "rowCount" in result) {
+      affectedRows = (result as any).rowCount;
+    }
+
+    if (affectedRows === 0) {
       return NextResponse.json(
         { error: "Attendee not found" },
         { status: 404 }

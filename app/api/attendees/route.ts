@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import pool from "@/lib/db";
+import db, { transformQuery } from "@/lib/db/database.service";
 import { Attendee } from "@/lib/types";
-import { isValidPhoneNumber, transformPhoneNumber } from "@/lib/utils";
+import { isValidPhoneNumber } from "@/lib/utils";
 
 export async function GET() {
   try {
-    const [rows] = await pool.query(
+    const sql = transformQuery(
       "SELECT * FROM attendees ORDER BY confirmation_date DESC"
     );
+    const [rows] = await db.query(sql);
     return NextResponse.json(rows);
   } catch (error) {
     console.error("Error fetching attendees:", error);
@@ -49,24 +50,34 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const [result] = await pool.query(
+    const sql = transformQuery(
       `INSERT INTO attendees 
        (name, phone_number, email, job_title, company, group_size, dietary_preferences, additional_comments) 
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-      [
-        data.name,
-        data.phone_number, // Already transformed by the frontend
-        data.email,
-        data.job_title,
-        data.company,
-        data.group_size,
-        data.dietary_preferences || null,
-        data.additional_comments || null,
-      ]
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
     );
 
-    // @ts-ignore
-    const insertId = result.insertId;
+    const [result] = await db.query(sql, [
+      data.name,
+      data.phone_number, // Already transformed by the frontend
+      data.email,
+      data.job_title,
+      data.company,
+      data.group_size,
+      data.dietary_preferences || null,
+      data.additional_comments || null,
+    ]);
+
+    // Get the inserted ID (handle both MySQL and PostgreSQL)
+    let insertId;
+    if (Array.isArray(result) && result.length > 0) {
+      // PostgreSQL returns the inserted row
+      insertId = result[0].id;
+    } else if (result && typeof result === "object" && "insertId" in result) {
+      // MySQL returns an object with insertId
+      insertId = (result as any).insertId;
+    } else {
+      insertId = 0; // Fallback
+    }
 
     return NextResponse.json({ id: insertId, ...data }, { status: 201 });
   } catch (error) {
