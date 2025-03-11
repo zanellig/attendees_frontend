@@ -1,5 +1,5 @@
 # Stage 1: Dependencies
-FROM node:20-alpine AS deps
+FROM node:iron-alpine AS deps
 WORKDIR /app
 
 # Install pnpm
@@ -10,7 +10,7 @@ COPY package.json pnpm-lock.yaml* ./
 RUN pnpm install --frozen-lockfile
 
 # Stage 2: Builder
-FROM node:20-alpine AS builder
+FROM node:iron-alpine AS builder
 WORKDIR /app
 
 # Install pnpm
@@ -28,7 +28,7 @@ ENV NODE_ENV production
 RUN pnpm build
 
 # Stage 3: Runner
-FROM node:20-alpine AS runner
+FROM node:iron-alpine AS runner
 WORKDIR /app
 
 # Install pnpm
