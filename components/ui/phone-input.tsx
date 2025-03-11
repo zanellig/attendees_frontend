@@ -63,12 +63,6 @@ export function PhoneInput({
     }
   };
 
-  // Convert formatted phone number to raw digits for form submission
-  const getRawValue = () => {
-    if (typeof value !== "string") return "";
-    return value.replace(/\D/g, "");
-  };
-
   return (
     <div className="space-y-2">
       {label && <Label htmlFor={props.id}>{label}</Label>}
