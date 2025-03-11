@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import db, { transformQuery } from "@/lib/db/database.service";
 import { Attendee } from "@/lib/types";
-import { isValidPhoneNumber } from "@/lib/utils";
 
 export async function GET() {
   try {
