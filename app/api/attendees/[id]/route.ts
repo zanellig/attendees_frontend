@@ -5,10 +5,11 @@ import { isValidPhoneNumber } from "@/lib/utils";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
+    console.log("GET - ID:", id, "Type:", typeof id);
 
     if (!id) {
       return NextResponse.json(
@@ -18,7 +19,10 @@ export async function GET(
     }
 
     const sql = transformQuery("SELECT * FROM attendees WHERE id = ?");
+    console.log("GET - SQL:", sql);
+
     const [rows] = await db.query(sql, [id]);
+    console.log("GET - Query result:", rows);
 
     if (!rows || (Array.isArray(rows) && rows.length === 0)) {
       return NextResponse.json(
@@ -39,10 +43,11 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
+    console.log("PUT - ID:", id, "Type:", typeof id);
 
     if (!id) {
       return NextResponse.json(
@@ -52,6 +57,7 @@ export async function PUT(
     }
 
     const data: Attendee = await request.json();
+    console.log("PUT - Data:", data);
 
     if (
       !data.name ||
@@ -87,8 +93,9 @@ export async function PUT(
        additional_comments = ? 
        WHERE id = ?`
     );
+    console.log("PUT - SQL:", sql);
 
-    const [result] = await db.query(sql, [
+    const params_array = [
       data.name,
       data.phone_number,
       data.email,
@@ -98,13 +105,21 @@ export async function PUT(
       data.dietary_preferences || null,
       data.additional_comments || null,
       id,
-    ]);
+    ];
+    console.log("PUT - Params:", params_array);
+
+    const [result] = await db.query(sql, params_array);
+    console.log("PUT - Query result:", result);
 
     let affectedRows = 0;
     if (result && typeof result === "object" && "affectedRows" in result) {
       affectedRows = (result as any).affectedRows;
+      console.log("PUT - MySQL affectedRows:", affectedRows);
     } else if (result && typeof result === "object" && "rowCount" in result) {
       affectedRows = (result as any).rowCount;
+      console.log("PUT - PostgreSQL rowCount:", affectedRows);
+    } else {
+      console.log("PUT - Result structure:", result);
     }
 
     if (affectedRows === 0) {
@@ -126,10 +141,11 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
+    console.log("DELETE - ID:", id, "Type:", typeof id);
 
     if (!id) {
       return NextResponse.json(
@@ -139,13 +155,20 @@ export async function DELETE(
     }
 
     const sql = transformQuery("DELETE FROM attendees WHERE id = ?");
+    console.log("DELETE - SQL:", sql);
+
     const [result] = await db.query(sql, [id]);
+    console.log("DELETE - Query result:", result);
 
     let affectedRows = 0;
     if (result && typeof result === "object" && "affectedRows" in result) {
       affectedRows = (result as any).affectedRows;
+      console.log("DELETE - MySQL affectedRows:", affectedRows);
     } else if (result && typeof result === "object" && "rowCount" in result) {
       affectedRows = (result as any).rowCount;
+      console.log("DELETE - PostgreSQL rowCount:", affectedRows);
+    } else {
+      console.log("DELETE - Result structure:", result);
     }
 
     if (affectedRows === 0) {
