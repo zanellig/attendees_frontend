@@ -1,0 +1,35 @@
+version: "3"
+
+services:
+  app:
+    image: event-confirmation-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_TYPE=postgres
+      - DATABASE_HOST=db
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=your_password
+      - DATABASE_NAME=event_confirmations
+      - DATABASE_PORT=5432
+    depends_on:
+      - db
+    restart: always
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=your_password
+      - POSTGRES_DB=event_confirmations
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: always
+
+volumes:
+  postgres_data:
