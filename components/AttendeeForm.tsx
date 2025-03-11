@@ -10,12 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { PhoneInput } from "@/components/ui/phone-input";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { useCreateAttendee, useUpdateAttendee } from "@/hooks/useAttendees";
 import { toast } from "sonner";
 import { isValidPhoneNumber } from "@/lib/utils";
@@ -50,8 +45,7 @@ export function AttendeeForm({ attendee, onSuccess }: AttendeeFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [countryCode, setCountryCode] = useState("54");
   const createAttendee = useCreateAttendee();
-  const updateAttendee = attendee?.id ? useUpdateAttendee(attendee.id) : null;
-
+  const updateAttendee = useUpdateAttendee(attendee?.id || 0);
   const isEditing = !!attendee?.id;
 
   // Format the phone number for display if editing
@@ -103,7 +97,7 @@ export function AttendeeForm({ attendee, onSuccess }: AttendeeFormProps) {
         phone_number: `${countryCode}9${data.phone_number.replace(/\D/g, "")}`,
       };
 
-      if (isEditing && updateAttendee) {
+      if (isEditing) {
         await updateAttendee.mutateAsync(transformedData);
         toast.success("Asistente actualizado con éxito");
       } else {
