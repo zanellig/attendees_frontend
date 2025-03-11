@@ -16,6 +16,8 @@ export class PostgresDatabase implements Database {
     console.log("PostgreSQL result:", result);
 
     // PostgreSQL returns rows in result.rows
+    // For operations with RETURNING clause, the rows will contain the returned data
+    // For operations without RETURNING, the rows array might be empty
     return [result.rows as T[], result] as [T[], any];
   }
 

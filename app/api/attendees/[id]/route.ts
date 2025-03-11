@@ -3,6 +3,19 @@ import db, { transformQuery } from "@/lib/db/database.service";
 import { Attendee } from "@/lib/types";
 import { isValidPhoneNumber } from "@/lib/utils";
 
+// Get database type from environment variables
+const dbType = process.env.DATABASE_TYPE || "mysql";
+
+// Function to prepare ID parameter based on database type
+const prepareIdParam = (id: string) => {
+  // For PostgreSQL, ensure the ID is treated as an integer
+  if (dbType === "postgres") {
+    return parseInt(id);
+  }
+  // For MySQL, return as is
+  return id;
+};
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -18,11 +31,15 @@ export async function GET(
       );
     }
 
+    const idParam = prepareIdParam(id);
+    console.log("GET - Prepared ID:", idParam, "Type:", typeof idParam);
+
     const sql = transformQuery("SELECT * FROM attendees WHERE id = ?");
     console.log("GET - SQL:", sql);
 
-    const [rows] = await db.query(sql, [id]);
+    const [rows, result] = await db.query(sql, [idParam]);
     console.log("GET - Query result:", rows);
+    console.log("GET - Query metadata:", result);
 
     if (!rows || (Array.isArray(rows) && rows.length === 0)) {
       return NextResponse.json(
@@ -56,6 +73,9 @@ export async function PUT(
       );
     }
 
+    const idParam = prepareIdParam(id);
+    console.log("PUT - Prepared ID:", idParam, "Type:", typeof idParam);
+
     const data: Attendee = await request.json();
     console.log("PUT - Data:", data);
 
@@ -81,18 +101,36 @@ export async function PUT(
       );
     }
 
-    const sql = transformQuery(
-      `UPDATE attendees SET 
-       name = ?, 
-       phone_number = ?, 
-       email = ?, 
-       job_title = ?, 
-       company = ?, 
-       group_size = ?, 
-       dietary_preferences = ?, 
-       additional_comments = ? 
-       WHERE id = ?`
-    );
+    let sql;
+    if (dbType === "postgres") {
+      // For PostgreSQL, use RETURNING to get the updated row
+      sql = transformQuery(
+        `UPDATE attendees SET 
+         name = ?, 
+         phone_number = ?, 
+         email = ?, 
+         job_title = ?, 
+         company = ?, 
+         group_size = ?, 
+         dietary_preferences = ?, 
+         additional_comments = ? 
+         WHERE id = ? RETURNING *`
+      );
+    } else {
+      // For MySQL, use the standard UPDATE
+      sql = transformQuery(
+        `UPDATE attendees SET 
+         name = ?, 
+         phone_number = ?, 
+         email = ?, 
+         job_title = ?, 
+         company = ?, 
+         group_size = ?, 
+         dietary_preferences = ?, 
+         additional_comments = ? 
+         WHERE id = ?`
+      );
+    }
     console.log("PUT - SQL:", sql);
 
     const params_array = [
@@ -104,12 +142,13 @@ export async function PUT(
       data.group_size,
       data.dietary_preferences || null,
       data.additional_comments || null,
-      id,
+      idParam,
     ];
     console.log("PUT - Params:", params_array);
 
-    const [result] = await db.query(sql, params_array);
-    console.log("PUT - Query result:", result);
+    const [rows, result] = await db.query(sql, params_array);
+    console.log("PUT - Query result:", rows);
+    console.log("PUT - Query metadata:", result);
 
     let affectedRows = 0;
     if (result && typeof result === "object" && "affectedRows" in result) {
@@ -118,8 +157,12 @@ export async function PUT(
     } else if (result && typeof result === "object" && "rowCount" in result) {
       affectedRows = (result as any).rowCount;
       console.log("PUT - PostgreSQL rowCount:", affectedRows);
+    } else if (Array.isArray(rows) && rows.length > 0) {
+      affectedRows = rows.length;
+      console.log("PUT - PostgreSQL returned rows:", affectedRows);
     } else {
       console.log("PUT - Result structure:", result);
+      console.log("PUT - Rows structure:", rows);
     }
 
     if (affectedRows === 0) {
@@ -154,11 +197,22 @@ export async function DELETE(
       );
     }
 
-    const sql = transformQuery("DELETE FROM attendees WHERE id = ?");
+    const idParam = prepareIdParam(id);
+    console.log("DELETE - Prepared ID:", idParam, "Type:", typeof idParam);
+
+    let sql;
+    if (dbType === "postgres") {
+      // For PostgreSQL, use RETURNING to get the deleted row
+      sql = transformQuery("DELETE FROM attendees WHERE id = ? RETURNING *");
+    } else {
+      // For MySQL, use the standard DELETE
+      sql = transformQuery("DELETE FROM attendees WHERE id = ?");
+    }
     console.log("DELETE - SQL:", sql);
 
-    const [result] = await db.query(sql, [id]);
-    console.log("DELETE - Query result:", result);
+    const [rows, result] = await db.query(sql, [idParam]);
+    console.log("DELETE - Query result:", rows);
+    console.log("DELETE - Query metadata:", result);
 
     let affectedRows = 0;
     if (result && typeof result === "object" && "affectedRows" in result) {
@@ -167,8 +221,12 @@ export async function DELETE(
     } else if (result && typeof result === "object" && "rowCount" in result) {
       affectedRows = (result as any).rowCount;
       console.log("DELETE - PostgreSQL rowCount:", affectedRows);
+    } else if (Array.isArray(rows) && rows.length > 0) {
+      affectedRows = rows.length;
+      console.log("DELETE - PostgreSQL returned rows:", affectedRows);
     } else {
       console.log("DELETE - Result structure:", result);
+      console.log("DELETE - Rows structure:", rows);
     }
 
     if (affectedRows === 0) {

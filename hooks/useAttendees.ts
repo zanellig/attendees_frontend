@@ -105,8 +105,10 @@ export function useDeleteAttendee() {
 
       return response.json();
     },
-    onSuccess: () => {
-      // Invalidate the attendees query to refetch the list
+    onError: (error) => {
+      console.error("Error deleting attendee:", error);
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["attendees"] });
     },
   });

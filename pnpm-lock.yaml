@@ -92,9 +92,6 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.67.2
         version: 5.67.2(react@19.0.0)
-      '@types/pg':
-        specifier: ^8.11.11
-        version: 8.11.11
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -177,6 +174,9 @@ importers:
       '@types/node':
         specifier: ^20
         version: 20.17.24
+      '@types/pg':
+        specifier: ^8.11.11
+        version: 8.11.11
       '@types/react':
         specifier: ^19
         version: 19.0.10
