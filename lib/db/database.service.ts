@@ -26,7 +26,7 @@ const getDbConfig = () => {
         queueLimit: 0,
       };
     case "postgres":
-      const config = {
+      return {
         host: process.env.DATABASE_HOST || "localhost",
         user: process.env.DATABASE_USER || "postgres",
         password: process.env.DATABASE_PASSWORD || "",
@@ -37,8 +37,6 @@ const getDbConfig = () => {
         max: 10, // Connection pool max size
         idleTimeoutMillis: 30000, // How long a client is allowed to remain idle before being closed
       };
-      console.log("PostgreSQL config:", config);
-      return config;
     default:
       throw new Error(`Unsupported database type: ${dbType}`);
   }

@@ -9,15 +9,7 @@ export class PostgresDatabase implements Database {
   }
 
   async query<T = any>(sql: string, params?: any[]): Promise<[T[], any]> {
-    console.log("PostgreSQL query:", sql);
-    console.log("PostgreSQL params:", params);
-
     const result = await this.pool.query(sql, params);
-    console.log("PostgreSQL result:", result);
-
-    // PostgreSQL returns rows in result.rows
-    // For operations with RETURNING clause, the rows will contain the returned data
-    // For operations without RETURNING, the rows array might be empty
     return [result.rows as T[], result] as [T[], any];
   }
 
