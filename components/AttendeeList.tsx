@@ -118,7 +118,9 @@ export function AttendeeList() {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Asistentes al Evento</h2>
+        <h2 className="text-2xl font-bold">
+          Asistentes al Evento: {attendees?.length}
+        </h2>
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
             <Button>
