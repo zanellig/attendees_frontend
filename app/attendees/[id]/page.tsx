@@ -103,7 +103,7 @@ export default function AttendeePage() {
               </Button>
               {/* via whatsapp */}
               <Button
-                className="bg-green-500 hover:bg-green-600 text-white"
+                className="bg-green-700 hover:bg-green-800 text-white"
                 onClick={() => {
                   const whatsappUrl = `https://wa.me/${attendee.phone_number}`;
                   window.open(whatsappUrl, "_blank");
