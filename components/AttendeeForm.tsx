@@ -25,9 +25,7 @@ const formSchema = z.object({
   email: z
     .string()
     .email({ message: "Dirección de correo electrónico inválida" }),
-  job_title: z
-    .string()
-    .min(1, { message: "El puesto de trabajo es obligatorio" }),
+  job_title: z.string().optional(),
   company: z.string().min(1, { message: "La empresa es obligatoria" }),
   group_size: z.coerce
     .number()
@@ -153,9 +151,16 @@ export function AttendeeForm({ attendee, onSuccess }: AttendeeFormProps) {
             )}
           />
 
+          <div className="bg-amber-50 dark:bg-amber-950/30 p-4 rounded-md border border-amber-200 dark:border-amber-800">
+            <p className="text-sm text-amber-800 dark:text-amber-300">
+              <strong>Nota:</strong> El número de teléfono debe tener 10 dígitos
+              en el formato: 11-XXXX-XXXX. Solo se permiten números.
+            </p>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="job_title">Puesto de Trabajo *</Label>
+              <Label htmlFor="job_title">Puesto de Trabajo</Label>
               <Input id="job_title" {...register("job_title")} />
               {errors.job_title && (
                 <p className="text-sm text-red-500">
@@ -204,12 +209,19 @@ export function AttendeeForm({ attendee, onSuccess }: AttendeeFormProps) {
             />
           </div>
 
-          <div className="bg-amber-50 dark:bg-amber-950/30 p-4 rounded-md border border-amber-200 dark:border-amber-800">
-            <p className="text-sm text-amber-800 dark:text-amber-300">
-              <strong>Nota:</strong> El número de teléfono debe tener 10 dígitos
-              en el formato: 11-XXXX-XXXX. Solo se permiten números.
-            </p>
-          </div>
+          {/* aviso que los campos marcados con * son obligatorios */}
+          {errors.name ||
+          errors.email ||
+          errors.phone_number ||
+          errors.company ||
+          errors.group_size ? (
+            <div className="bg-red-50 dark:bg-red-950/30 p-4 rounded-md border border-red-200 dark:border-red-800">
+              <p className="text-sm text-red-800 dark:text-red-300">
+                <strong>Nota:</strong> Los campos marcados con * son
+                obligatorios.
+              </p>
+            </div>
+          ) : null}
         </CardContent>
 
         <CardFooter className="flex justify-end space-x-2 pt-4">

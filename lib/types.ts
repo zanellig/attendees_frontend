@@ -3,7 +3,7 @@ export interface Attendee {
   name: string;
   phone_number: string;
   email: string;
-  job_title: string;
+  job_title?: string;
   company: string;
   group_size: number;
   dietary_preferences?: string;
@@ -15,7 +15,7 @@ export interface AttendeeFormData {
   name: string;
   phone_number: string;
   email: string;
-  job_title: string;
+  job_title?: string;
   company: string;
   group_size: number;
   dietary_preferences?: string;

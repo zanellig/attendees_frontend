@@ -27,7 +27,6 @@ export async function POST(request: NextRequest) {
       !data.name ||
       !data.phone_number ||
       !data.email ||
-      !data.job_title ||
       !data.company ||
       !data.group_size
     ) {
