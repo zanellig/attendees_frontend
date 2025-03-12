@@ -38,21 +38,21 @@ export function AttendeeDetails({ attendee }: AttendeeDetailsProps) {
       <CardContent className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <h3 className="text-sm font-medium text-muted-foreground">
+            <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
               Nombre
             </h3>
             <p className="text-base">{attendee.name}</p>
           </div>
 
           <div>
-            <h3 className="text-sm font-medium text-muted-foreground">
+            <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
               Correo Electrónico
             </h3>
             <p className="text-base">{attendee.email}</p>
           </div>
 
           <div>
-            <h3 className="text-sm font-medium text-muted-foreground">
+            <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
               Número de Teléfono
             </h3>
             <p className="text-base">
@@ -61,28 +61,28 @@ export function AttendeeDetails({ attendee }: AttendeeDetailsProps) {
           </div>
 
           <div>
-            <h3 className="text-sm font-medium text-muted-foreground">
+            <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
               Tamaño del Grupo
             </h3>
             <p className="text-base">{attendee.group_size}</p>
           </div>
 
           <div>
-            <h3 className="text-sm font-medium text-muted-foreground">
+            <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
               Puesto de Trabajo
             </h3>
             <p className="text-base">{attendee.job_title || "-"}</p>
           </div>
 
           <div>
-            <h3 className="text-sm font-medium text-muted-foreground">
+            <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
               Empresa
             </h3>
             <p className="text-base">{attendee.company || "-"}</p>
           </div>
 
           <div>
-            <h3 className="text-sm font-medium text-muted-foreground">
+            <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
               Fecha de Confirmación
             </h3>
             <p className="text-base">
@@ -96,7 +96,7 @@ export function AttendeeDetails({ attendee }: AttendeeDetailsProps) {
         <Separator />
 
         <div>
-          <h3 className="text-sm font-medium text-muted-foreground mb-2">
+          <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Preferencias Dietéticas
           </h3>
           <p className="text-base">
@@ -105,7 +105,7 @@ export function AttendeeDetails({ attendee }: AttendeeDetailsProps) {
         </div>
 
         <div>
-          <h3 className="text-sm font-medium text-muted-foreground mb-2">
+          <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Comentarios Adicionales
           </h3>
           <p className="text-base whitespace-pre-wrap">

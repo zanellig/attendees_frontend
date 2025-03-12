@@ -109,7 +109,7 @@ export function AttendeeList() {
 
   if (isError) {
     return (
-      <div className="text-center p-4 text-red-500">
+      <div className="text-center p-4 text-red-700 bg-red-50 rounded-md border border-red-200">
         Error al cargar los asistentes. Por favor, inténtelo de nuevo más tarde.
       </div>
     );
@@ -191,9 +191,8 @@ export function AttendeeList() {
                         <Pencil className="h-4 w-4" />
                       </Button>
                       <Button
-                        variant="outline"
+                        variant="destructive"
                         size="icon"
-                        className="text-red-500 hover:text-red-700"
                         onClick={() => handleDelete(attendee)}
                       >
                         <Trash2 className="h-4 w-4" />
