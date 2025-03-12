@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 import { Attendee } from "@/lib/types";
 import { useAttendees, useDeleteAttendee } from "@/hooks/useAttendees";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -32,7 +33,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { AttendeeForm } from "@/components/AttendeeForm";
 import { toast } from "sonner";
-import { Pencil, Trash2, Plus, Loader2, Eye } from "lucide-react";
+import { Pencil, Trash2, Plus, Loader2, Eye, Search } from "lucide-react";
 
 export function AttendeeList() {
   const router = useRouter();
@@ -48,6 +49,7 @@ export function AttendeeList() {
   const [attendeeToDelete, setAttendeeToDelete] = useState<Attendee | null>(
     null
   );
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Format the phone number for display
   const formatPhoneNumber = (phoneNumber: string) => {
@@ -68,6 +70,20 @@ export function AttendeeList() {
 
     return phoneNumber;
   };
+
+  // Filter attendees based on search query
+  const filteredAttendees = useMemo(() => {
+    if (!attendees || !searchQuery.trim()) return attendees;
+
+    const query = searchQuery.toLowerCase().trim();
+    return attendees.filter(
+      (attendee) =>
+        attendee.name?.toLowerCase().includes(query) ||
+        attendee.email?.toLowerCase().includes(query) ||
+        attendee.phone_number?.toLowerCase().includes(query) ||
+        attendee.company?.toLowerCase().includes(query)
+    );
+  }, [attendees, searchQuery]);
 
   const handleEdit = (attendee: Attendee) => {
     setSelectedAttendee(attendee);
@@ -119,7 +135,7 @@ export function AttendeeList() {
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">
-          Asistentes al Evento: {attendees?.length}
+          Asistentes al Evento: {filteredAttendees?.length || 0}
         </h2>
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
@@ -135,7 +151,17 @@ export function AttendeeList() {
         </Dialog>
       </div>
 
-      {attendees && attendees.length > 0 ? (
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <Input
+          placeholder="Buscar por nombre, correo, teléfono o empresa..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="pl-10"
+        />
+      </div>
+
+      {filteredAttendees && filteredAttendees.length > 0 ? (
         <div className="border rounded-md">
           <Table>
             <TableHeader>
@@ -150,7 +176,7 @@ export function AttendeeList() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {attendees.map((attendee) => (
+              {filteredAttendees.map((attendee) => (
                 <TableRow
                   key={attendee.id}
                   className="cursor-pointer hover:bg-muted/50"
@@ -207,8 +233,9 @@ export function AttendeeList() {
       ) : (
         <div className="text-center p-8 border rounded-md bg-muted/50">
           <p className="text-muted-foreground">
-            No se encontraron asistentes. Añada su primer asistente para
-            comenzar.
+            {searchQuery
+              ? "No se encontraron asistentes que coincidan con la búsqueda."
+              : "No se encontraron asistentes. Añada su primer asistente para comenzar."}
           </p>
         </div>
       )}
