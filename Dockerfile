@@ -25,7 +25,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 
 # Build the application
-RUN pnpm build
+RUN npm install -g pnpm && pnpm build
 
 # Stage 3: Runner
 FROM base AS runner
