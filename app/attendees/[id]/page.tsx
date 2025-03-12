@@ -8,7 +8,13 @@ import { AttendeeForm } from "@/components/AttendeeForm";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, ArrowLeft, Edit } from "lucide-react";
+import {
+  Loader2,
+  ArrowLeft,
+  Edit,
+  MessageCircleIcon,
+  MailIcon,
+} from "lucide-react";
 import { Toaster } from "@/components/ui/sonner";
 
 export default function AttendeePage() {
@@ -76,12 +82,38 @@ export default function AttendeePage() {
             )}
           </div>
 
-          <div className="space-y-2">
-            <h1 className="text-2xl font-bold">{attendee.name}</h1>
-            <p className="text-muted-foreground">
-              {attendee.email} • {attendee.phone_number}
-            </p>
-          </div>
+          <section className="flex justify-between">
+            <div className="space-y-2">
+              <h1 className="text-2xl font-bold">{attendee.name}</h1>
+              <p className="text-muted-foreground">
+                {attendee.email} • {attendee.phone_number}
+              </p>
+            </div>
+            <div className="flex space-x-2">
+              {/* via mail */}
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  const mailtoUrl = `mailto:${attendee.email}`;
+                  window.open(mailtoUrl, "_blank");
+                }}
+              >
+                <MailIcon className="mr-2 h-4 w-4" />
+                Contactar vía Mail
+              </Button>
+              {/* via whatsapp */}
+              <Button
+                className="bg-green-500 hover:bg-green-600 text-white"
+                onClick={() => {
+                  const whatsappUrl = `https://wa.me/${attendee.phone_number}`;
+                  window.open(whatsappUrl, "_blank");
+                }}
+              >
+                <MessageCircleIcon className="mr-2 h-4 w-4" />
+                Contactar vía Whatsapp
+              </Button>
+            </div>
+          </section>
 
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList>

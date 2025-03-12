@@ -8,9 +8,9 @@ export default function Home() {
       <Header />
       <main className="container mx-auto py-8 px-4">
         <div className="space-y-8">
-          <div className="text-center">
+          <div className="text-start">
             <h1 className="text-3xl font-bold tracking-tight">
-              Sistema de Confirmación de Eventos
+              Evento inauguración nuevas oficinas de LinkSolution
             </h1>
             <p className="text-muted-foreground mt-2">
               Gestione asistentes al evento y realice seguimiento de
