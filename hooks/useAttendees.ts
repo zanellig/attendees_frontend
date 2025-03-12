@@ -12,6 +12,14 @@ export function useAttendees() {
       }
       return response.json() as Promise<Attendee[]>;
     },
+    refetchInterval: 10000,
+    refetchIntervalInBackground: true,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+    retry: true,
+    retryDelay: 1000,
+    staleTime: 1000 * 60 * 5,
   });
 }
 
