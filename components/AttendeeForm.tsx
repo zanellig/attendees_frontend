@@ -217,8 +217,7 @@ export function AttendeeForm({ attendee, onSuccess }: AttendeeFormProps) {
           errors.group_size ? (
             <div className="bg-red-50 dark:bg-red-950/30 p-4 rounded-md border border-red-200 dark:border-red-800">
               <p className="text-sm text-red-800 dark:text-red-300">
-                <strong>Nota:</strong> Los campos marcados con * son
-                obligatorios.
+                Los campos marcados con * son obligatorios.
               </p>
             </div>
           ) : null}
