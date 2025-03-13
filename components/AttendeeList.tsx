@@ -146,8 +146,7 @@ export function AttendeeList() {
                   attendee.company
                     ?.toLocaleLowerCase()
                     .replace(/\s+/g, "")
-                    .includes("linksolution") ||
-                  attendee.email?.toLocaleLowerCase().includes("linksolution")
+                    .includes("linksolution")
                 )
             )?.length || 0}
           </h3>
