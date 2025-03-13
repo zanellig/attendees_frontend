@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import db, { transformQuery } from "@/lib/db/database.service";
 import { Attendee } from "@/lib/types";
+import { CONSTRAINT_ERRORS } from "@/lib/constants";
 
 // Get database type from environment variables
 const dbType = process.env.DATABASE_TYPE || "mysql";
@@ -172,8 +173,23 @@ export async function PUT(
     }
 
     return NextResponse.json({ id: parseInt(id), ...data });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error updating attendee:", error);
+
+    // Check for constraint violations
+    const constraint: string | undefined = error.constraint;
+
+    if (constraint) {
+      return NextResponse.json(
+        {
+          error: CONSTRAINT_ERRORS[
+            constraint as keyof typeof CONSTRAINT_ERRORS
+          ] as string,
+        },
+        { status: 500 }
+      );
+    }
+
     return NextResponse.json(
       { error: "Failed to update attendee" },
       { status: 500 }

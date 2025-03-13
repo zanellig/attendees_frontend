@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import db, { transformQuery } from "@/lib/db/database.service";
 import { Attendee } from "@/lib/types";
+import { CONSTRAINT_ERRORS } from "@/lib/constants";
 
 export async function GET() {
   try {
@@ -78,11 +79,23 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ id: insertId, ...data }, { status: 201 });
-  } catch (error) {
-    console.error("Error creating attendee:", error);
-    return NextResponse.json(
-      { error: "Failed to create attendee" },
-      { status: 500 }
-    );
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    console.error("Error creating attendee:", error.constraint);
+    const constraint: string | undefined = error.constraint;
+
+    if (constraint) {
+      return NextResponse.json(
+        {
+          error: CONSTRAINT_ERRORS[
+            constraint as keyof typeof CONSTRAINT_ERRORS
+          ] as string,
+        },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
