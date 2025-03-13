@@ -134,9 +134,21 @@ export function AttendeeList() {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">
-          Asistentes al Evento: {filteredAttendees?.length || 0}
-        </h2>
+        <div className="flex flex-col gap-2">
+          <h2 className="text-2xl font-bold">
+            Asistentes al Evento: {filteredAttendees?.length || 0}
+          </h2>
+          <h3 className="text-md text-muted-foreground">
+            Externos:{" "}
+            {filteredAttendees?.filter(
+              (attendee) =>
+                !attendee.company
+                  ?.toLocaleLowerCase()
+                  .trim()
+                  .includes("linksolution")
+            )?.length || 0}
+          </h3>
+        </div>
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
             <Button>
