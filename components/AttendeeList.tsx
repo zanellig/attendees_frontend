@@ -142,10 +142,13 @@ export function AttendeeList() {
             Externos:{" "}
             {filteredAttendees?.filter(
               (attendee) =>
-                !attendee.company
-                  ?.toLocaleLowerCase()
-                  .trim()
-                  .includes("linksolution")
+                !(
+                  attendee.company
+                    ?.toLocaleLowerCase()
+                    .replace(/\s+/g, "")
+                    .includes("linksolution") ||
+                  attendee.email?.toLocaleLowerCase().includes("linksolution")
+                )
             )?.length || 0}
           </h3>
         </div>
