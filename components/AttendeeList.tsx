@@ -33,7 +33,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { AttendeeForm } from "@/components/AttendeeForm";
 import { toast } from "sonner";
-import { Pencil, Trash2, Plus, Loader2, Eye, Search } from "lucide-react";
+import { Pencil, Plus, Loader2, Eye, Search } from "lucide-react";
 
 export function AttendeeList() {
   const router = useRouter();
@@ -131,6 +131,21 @@ export function AttendeeList() {
     );
   }
 
+  const externalAttendees = filteredAttendees?.filter(
+    (attendee) =>
+      !attendee.company
+        ?.toLocaleLowerCase()
+        .replace(/\s+/g, "")
+        .includes("linksolution")
+  )?.length;
+
+  const internalAttendees = filteredAttendees?.filter((attendee) =>
+    attendee.company
+      ?.toLocaleLowerCase()
+      .replace(/\s+/g, "")
+      .includes("linksolution")
+  )?.length;
+
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
@@ -139,16 +154,8 @@ export function AttendeeList() {
             Asistentes al Evento: {filteredAttendees?.length || 0}
           </h2>
           <h3 className="text-md text-muted-foreground">
-            Externos:{" "}
-            {filteredAttendees?.filter(
-              (attendee) =>
-                !(
-                  attendee.company
-                    ?.toLocaleLowerCase()
-                    .replace(/\s+/g, "")
-                    .includes("linksolution")
-                )
-            )?.length || 0}
+            Externos: {externalAttendees || 0} • LinkSolution:{" "}
+            {internalAttendees || 0}
           </h3>
         </div>
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
@@ -230,13 +237,13 @@ export function AttendeeList() {
                       >
                         <Pencil className="h-4 w-4" />
                       </Button>
-                      <Button
+                      {/* <Button
                         variant="destructive"
                         size="icon"
                         onClick={() => handleDelete(attendee)}
                       >
                         <Trash2 className="h-4 w-4" />
-                      </Button>
+                      </Button> */}
                     </div>
                   </TableCell>
                 </TableRow>
