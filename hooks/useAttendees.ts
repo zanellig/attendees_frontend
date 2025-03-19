@@ -36,7 +36,8 @@ export function useAttendee(id: number | string | undefined) {
       return response.json() as Promise<Attendee>;
     },
     enabled: !!id, // Only run the query if we have an ID
-    refetchInterval: 10000,
+    staleTime: 2000,
+    refetchInterval: 2000,
     refetchIntervalInBackground: true,
     refetchOnMount: true,
     refetchOnWindowFocus: true,
