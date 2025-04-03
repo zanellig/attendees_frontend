@@ -18,7 +18,7 @@ export const GiveGiftButton: React.FC<GiveGiftButtonProps> = ({ userId }) => {
 
   const { data } = useAttendee(userId);
 
-  const [isGifted, setIsGifted] = React.useState(data?.gift_received);
+  const [isGifted, setIsGifted] = React.useState(!!data?.gift_received);
 
   const mutation = useMutation({
     mutationFn: () => {
