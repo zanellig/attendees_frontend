@@ -46,7 +46,7 @@ export const GiveGiftButton: React.FC<GiveGiftButtonProps> = ({ userId }) => {
       ) : isGifted ? (
         <Check />
       ) : (
-        <Gift className={`text-${isGifted ? "red-500" : "gree-500"}`} />
+        <Gift className={`text-${isGifted ? "red-500" : "green-500"}`} />
       )}
       {mutation.isPending
         ? "Confirmando..."
