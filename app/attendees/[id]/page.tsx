@@ -151,7 +151,7 @@ export default function AttendeePage() {
             <ConfirmationButton userId={id} />
             <Button variant={"default"} className="w-full flex gap-2">
               <Gift />
-              <>Entregar regalo</>
+              Entregar regalo
             </Button>
           </div>
         </div>
