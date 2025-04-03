@@ -9,6 +9,8 @@ export interface Attendee {
   dietary_preferences?: string;
   additional_comments?: string;
   confirmation_date?: string;
+  assisted?: boolean;
+  gift_received?: boolean;
 }
 
 export interface AttendeeFormData {
