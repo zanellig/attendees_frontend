@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { Toaster } from "@/components/ui/sonner";
 import { GiveGiftButton } from "@/components/GiveGiftButton";
+import { useMutation } from "@tanstack/react-query";
 
 export default function AttendeePage() {
   const params = useParams();
@@ -28,6 +29,17 @@ export default function AttendeePage() {
   const id = params.id as string;
   const { data: attendee, isLoading, isError } = useAttendee(id);
   const [activeTab, setActiveTab] = useState("details");
+
+  const attendanceStatusMutation = useMutation({
+    mutationKey: ["attendee", id, "assisted"],
+  });
+
+  const giftStatusMutation = useMutation({
+    mutationKey: ["attendee", id, "gift"],
+  });
+
+  console.log(attendanceStatusMutation.status);
+  console.log(giftStatusMutation.status);
 
   const handleBackClick = () => {
     router.push("/");

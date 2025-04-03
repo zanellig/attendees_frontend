@@ -21,8 +21,10 @@ export const updateAttendeesAssisted = async ({
       !assistedResult,
       idParam,
     ]);
+    return { success: true, assisted: attendeeRows[0]?.assisted };
   } catch (error) {
     console.error("Error confirming attendance:", error);
+    return { success: false };
   }
 };
 export const updateAttendeesGiffed = async ({ userId }: { userId: string }) => {
@@ -32,7 +34,9 @@ export const updateAttendeesGiffed = async ({ userId }: { userId: string }) => {
   );
   try {
     await db.query(updateGiftedQuery, [true, idParam]);
+    return { success: true };
   } catch (error) {
     console.error("Error confirming gift:", error);
+    return { success: false };
   }
 };

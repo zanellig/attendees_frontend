@@ -21,8 +21,15 @@ export const ConfirmationButton: React.FC<ConfirmationButtonProps> = ({
   const isAssisted = data?.assisted;
 
   const mutation = useMutation({
+    mutationKey: ["attendee", userId, "assisted"],
     mutationFn: () => updateAttendeesAssisted({ userId }),
-    onSettled: () => {
+    onSuccess: () => {
+      toast.success(
+        isAssisted ? "Se eliminó la asistencia" : "Se confirmó la asistencia"
+      );
+    },
+    onSettled: (data) => {
+      console.log(data);
       queryClient.invalidateQueries({ queryKey: ["attendees", userId] });
     },
     onError: (error) => {
