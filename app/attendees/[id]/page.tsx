@@ -125,11 +125,11 @@ export default function AttendeePage() {
           >
             {attendee.assisted ? (
               <>
-                <Check className="text-green-500" /> <>Asistente confirmado</>
+                <Check className="text-green-500" /> Asistente confirmado
               </>
             ) : (
               <>
-                <X className="text-red-500" /> <>Asistente no confirmado</>
+                <X className="text-red-500" /> Asistente no confirmado
               </>
             )}
           </section>
