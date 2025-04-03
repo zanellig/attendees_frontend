@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useAttendee } from "@/hooks/useAttendees";
 import { AttendeeDetails } from "@/components/AttendeeDetails";
 import { AttendeeForm } from "@/components/AttendeeForm";
+import { ConfirmationButton } from "@/components/ConfirmationButton";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -14,6 +15,9 @@ import {
   Edit,
   MessageCircleIcon,
   MailIcon,
+  Gift,
+  Check,
+  X,
 } from "lucide-react";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -115,6 +119,21 @@ export default function AttendeePage() {
             </div>
           </section>
 
+          <section
+            id="attendee-confirmation-status"
+            className="flex items-center gap-2"
+          >
+            {attendee.assisted ? (
+              <>
+                <Check className="text-green-500" /> Asistente confirmado
+              </>
+            ) : (
+              <>
+                <X className="text-red-500" /> Asistente no confirmado
+              </>
+            )}
+          </section>
+
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList>
               <TabsTrigger value="details">Detalles</TabsTrigger>
@@ -127,6 +146,14 @@ export default function AttendeePage() {
               <AttendeeForm attendee={attendee} onSuccess={handleEditSuccess} />
             </TabsContent>
           </Tabs>
+          {/* botones confirmacion */}
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <ConfirmationButton userId={id} />
+            <Button variant={"default"} className="w-full flex gap-2">
+              <Gift />
+              Entregar regalo
+            </Button>
+          </div>
         </div>
         <Toaster />
       </main>

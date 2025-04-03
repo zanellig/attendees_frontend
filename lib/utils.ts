@@ -36,3 +36,4 @@ export function isValidPhoneNumber(phoneNumber: string): boolean {
   // Check if we have exactly 10 digits
   return cleanedNumber.length === 10;
 }
+
