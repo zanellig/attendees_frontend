@@ -2,6 +2,8 @@
 
 A full-stack CRUD application for managing event attendees built with Next.js, React Query, and database support for both MySQL and PostgreSQL.
 
+![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/zanellig/attendees_frontend?utm_source=oss&utm_medium=github&utm_campaign=zanellig%2Fattendees_frontend&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
+
 ## Features
 
 - View a list of all event attendees
