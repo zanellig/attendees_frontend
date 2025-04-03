@@ -1,7 +1,9 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactNode, useState } from "react";
+import { ReactNode, Suspense, useState } from "react";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { Loader2 } from "lucide-react";
 
 interface ProvidersProps {
   children: ReactNode;
@@ -21,6 +23,14 @@ export function Providers({ children }: ProvidersProps) {
   );
 
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <Suspense
+      fallback={
+        <div className="flex justify-center items-center h-dvh w-dvw">
+          <Loader2 className="animate-spin" />
+        </div>
+      }
+    >
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    </Suspense>
   );
 }

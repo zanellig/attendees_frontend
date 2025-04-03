@@ -1,20 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import db, { transformQuery } from "@/lib/db/database.service";
 import { Attendee } from "@/lib/types";
-import { CONSTRAINT_ERRORS } from "@/lib/constants";
-
-// Get database type from environment variables
-const dbType = process.env.DATABASE_TYPE || "mysql";
-
-// Function to prepare ID parameter based on database type
-const prepareIdParam = (id: string) => {
-  // For PostgreSQL, ensure the ID is treated as an integer
-  if (dbType === "postgres") {
-    return parseInt(id);
-  }
-  // For MySQL, return as is
-  return id;
-};
+import { CONSTRAINT_ERRORS, dbType } from "@/lib/constants";
+import { prepareIdParam } from "@/lib/server-utils";
 
 export async function GET(
   request: NextRequest,
@@ -22,8 +10,6 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    console.log("GET - ID:", id, "Type:", typeof id);
-
     if (!id) {
       return NextResponse.json(
         { error: "Missing ID parameter" },
@@ -32,14 +18,9 @@ export async function GET(
     }
 
     const idParam = prepareIdParam(id);
-    console.log("GET - Prepared ID:", idParam, "Type:", typeof idParam);
-
     const sql = transformQuery("SELECT * FROM attendees WHERE id = ?");
-    console.log("GET - SQL:", sql);
 
-    const [rows, result] = await db.query(sql, [idParam]);
-    console.log("GET - Query result:", rows);
-    console.log("GET - Query metadata:", result);
+    const [rows] = await db.query(sql, [idParam]);
 
     if (!rows || (Array.isArray(rows) && rows.length === 0)) {
       return NextResponse.json(
@@ -64,7 +45,6 @@ export async function PUT(
 ) {
   try {
     const { id } = await params;
-    console.log("PUT - ID:", id, "Type:", typeof id);
 
     if (!id) {
       return NextResponse.json(
@@ -74,10 +54,8 @@ export async function PUT(
     }
 
     const idParam = prepareIdParam(id);
-    console.log("PUT - Prepared ID:", idParam, "Type:", typeof idParam);
 
     const data: Attendee = await request.json();
-    console.log("PUT - Data:", data);
 
     if (
       !data.name ||
@@ -131,7 +109,6 @@ export async function PUT(
          WHERE id = ?`
       );
     }
-    console.log("PUT - SQL:", sql);
 
     const params_array = [
       data.name,
@@ -144,11 +121,8 @@ export async function PUT(
       data.additional_comments || null,
       idParam,
     ];
-    console.log("PUT - Params:", params_array);
 
     const [rows, result] = await db.query(sql, params_array);
-    console.log("PUT - Query result:", rows);
-    console.log("PUT - Query metadata:", result);
 
     let affectedRows = 0;
     if (result && typeof result === "object" && "affectedRows" in result) {
