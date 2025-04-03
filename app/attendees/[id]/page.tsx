@@ -20,6 +20,7 @@ import {
   X,
 } from "lucide-react";
 import { Toaster } from "@/components/ui/sonner";
+import { GiveGiftButton } from "@/components/GiveGiftButton";
 
 export default function AttendeePage() {
   const params = useParams();
@@ -133,6 +134,20 @@ export default function AttendeePage() {
               </>
             )}
           </section>
+          <section
+            id="attendee-confirmation-status"
+            className="flex items-center gap-2"
+          >
+            {attendee.gift_received ? (
+              <>
+                <Gift className="text-green-500" /> Regalo entregado
+              </>
+            ) : (
+              <>
+                <Gift className="text-red-500" /> Regalo no entregado
+              </>
+            )}
+          </section>
 
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList>
@@ -149,10 +164,7 @@ export default function AttendeePage() {
           {/* botones confirmacion */}
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <ConfirmationButton userId={id} />
-            <Button variant={"default"} className="w-full flex gap-2">
-              <Gift />
-              Entregar regalo
-            </Button>
+            <GiveGiftButton userId={id} />
           </div>
         </div>
         <Toaster />
