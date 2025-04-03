@@ -13,8 +13,9 @@ export const updateAttendeesAssisted = async ({
     const [assistedRows] = await db.query(checkAssistedQuery, [idParam]);
     const assistedResult: boolean = assistedRows[0]?.assisted;
     const updateAssistedQuery = transformQuery(
-      `UPDATE attendees SET assisted = ${!assistedResult} WHERE id = ?`
+      "UPDATE attendees SET assisted = ? WHERE id = ?"
     );
+    const [attendeeRows] = await db.query(updateAssistedQuery, [!assistedResult, idParam]);
     const [attendeeRows] = await db.query(updateAssistedQuery, [idParam]);
   } catch (error) {
     console.error("Error confirming attendance:", error);
