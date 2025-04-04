@@ -33,7 +33,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { AttendeeForm } from "@/components/AttendeeForm";
 import { toast } from "sonner";
-import { Pencil, Plus, Loader2, Eye, Search } from "lucide-react";
+import { Pencil, Plus, Loader2, Eye, Search, Trash2 } from "lucide-react";
 
 export function AttendeeList() {
   const router = useRouter();
@@ -232,18 +232,20 @@ export function AttendeeList() {
                       </Button>
                       <Button
                         variant="outline"
+                        className=""
                         size="icon"
                         onClick={() => handleEdit(attendee)}
                       >
                         <Pencil className="h-4 w-4" />
                       </Button>
-                      {/* <Button
+                      <Button
                         variant="destructive"
+                        className=""
                         size="icon"
                         onClick={() => handleDelete(attendee)}
                       >
                         <Trash2 className="h-4 w-4" />
-                      </Button> */}
+                      </Button>
                     </div>
                   </TableCell>
                 </TableRow>
